@@ -1,3 +1,4 @@
+#include <ArduinoLowPower.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include "DHT.h"
@@ -81,4 +82,5 @@ void loop() {
   String sensorData = "Temperature Data: " + String(t) + " \n Humidity Data " + String(h);
   mqtt_client.publish(topic, sensorData.c_str());
   delay(2000);
+  // LowPower.deepSleep(2000);
 }
