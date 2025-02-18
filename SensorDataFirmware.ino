@@ -45,7 +45,6 @@ void mqttCallback(char *topic, byte *payload, unsigned int length);
 
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin("Star-boys5G", "ydou472bmt");
