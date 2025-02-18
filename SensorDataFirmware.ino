@@ -108,6 +108,6 @@ void loop() {
   float h = dht.readHumidity();
   float t = dht.readTemperature();
   String sensorData = "Temperature Data: " + t + " \n Humidity Data " + h;
-  mqtt_client.publish(mqtt_topic, sensorData.c_str())
-  delay(2000)
+  mqtt_client.publish(mqtt_topic, sensorData.c_str());
+  delay(2000);
 }
