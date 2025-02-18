@@ -3,8 +3,8 @@
 #include <WiFiClientSecure.h>
 #include "DHT.h"
 
-#define analogPin A0
 #define DHTTYPE DHT22
+#define DHTPIN 4 
 
 const char *mqtt_broker = "broker.emqx.io";
 const char *topic = "sensorData/esp32";
