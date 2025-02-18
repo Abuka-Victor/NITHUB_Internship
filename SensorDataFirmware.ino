@@ -1,9 +1,13 @@
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <PubSubClient.h>
 #include <WiFiClientSecure.h>
+#include "DHT.h"
+
+#define analogPin A0
+#define DHTTYPE DHT22
 
 const char *mqtt_broker = "broker.emqx.io";
-const char *topic = "emqx/esp32";
+const char *topic = "sensorData/esp32";
 const char *mqtt_username = "emqx";
 const char *mqtt_password = "public";
 const int mqtt_port = 8883;
@@ -43,6 +47,7 @@ PubSubClient mqtt_client(esp_client);
 void connectToMQTT();
 void mqttCallback(char *topic, byte *payload, unsigned int length);
 
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(115200);
@@ -64,6 +69,8 @@ void setup() {
   mqtt_client.setKeepAlive(60);
   mqtt_client.setCallback(mqttCallback);
   connectToMQTT();
+
+  dht.begin();
 }
 
 void connectToMQTT() {
@@ -73,7 +80,7 @@ void connectToMQTT() {
     if (mqtt_client.connect(client_id.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("Connected to MQTT broker");
       mqtt_client.subscribe(mqtt_topic);
-      mqtt_client.publish(mqtt_topic, "Hi EMQX I'm an ESP32 ^^ Victor's Nithub project");  // Publish message upon connection
+      mqtt_client.publish(mqtt_topic, "Hi EMQX I'm an ESP32 ^^ Victor's Nithub project This is a greeting message");  // Publish message upon connection
     } else {
       Serial.print("Failed to connect to MQTT broker, rc=");
       Serial.print(mqtt_client.state());
@@ -98,4 +105,9 @@ void loop() {
           connectToMQTT();
       }
       mqtt_client.loop();
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  String sensorData = "Temperature Data: " + t + " \n Humidity Data " + h;
+  mqtt_client.publish(mqtt_topic, sensorData.c_str())
+  delay(2000)
 }
